@@ -1,6 +1,7 @@
 /config/*
 !/config/formats.ts
 !/config/config-example.js
+!/config/config.js
 /logs/**/*
 !/logs/logging.md
 !/logs/repl/
