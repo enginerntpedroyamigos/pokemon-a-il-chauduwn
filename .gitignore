@@ -58,7 +58,9 @@ tmp/**/*
 .installed.cfg
 
 downloads
-dist
+# dist (compilado) SÍ se commitea para este deploy — así Render no tiene que
+# compilar TypeScript en build (eso es lo que se quedaba sin memoria en el
+# plan gratis de 512MB). Ver render.yaml.
 
 # egg related
 develop-eggs

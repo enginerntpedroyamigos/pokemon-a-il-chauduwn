@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["../../../translations/korean/main.ts"],
+  "sourcesContent": ["import type { Translations } from '../../server/chat';\n\nexport const translations: Translations = {\n\tname: \"Korean\",\n\tstrings: {},\n};\n"],
+  "mappings": ";;;;;;;;;;;;;;;;;;AAAA;AAAA;AAAA;AAAA;AAAA;AAEO,MAAM,eAA6B;AAAA,EACzC,MAAM;AAAA,EACN,SAAS,CAAC;AACX;",
+  "names": []
+}

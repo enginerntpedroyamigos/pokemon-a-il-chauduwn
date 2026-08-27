@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["../../../../data/mods/championsregma/abilities.ts"],
+  "sourcesContent": ["export const Abilities: import('../../../sim/dex-abilities').ModdedAbilityDataTable = {\n\tspicyspray: {\n\t\tinherit: true,\n\t\tonDamagingHit(damage, target, source, move) {\n\t\t\tif (!source.trySetStatus('brn', target) && !source.status && source.hasType('Fire')) {\n\t\t\t\tthis.add('-immune', source);\n\t\t\t}\n\t\t},\n\t},\n};\n"],
+  "mappings": ";;;;;;;;;;;;;;;;;;AAAA;AAAA;AAAA;AAAA;AAAA;AAAO,MAAM,YAAyE;AAAA,EACrF,YAAY;AAAA,IACX,SAAS;AAAA,IACT,cAAc,QAAQ,QAAQ,QAAQ,MAAM;AAC3C,UAAI,CAAC,OAAO,aAAa,OAAO,MAAM,KAAK,CAAC,OAAO,UAAU,OAAO,QAAQ,MAAM,GAAG;AACpF,aAAK,IAAI,WAAW,MAAM;AAAA,MAC3B;AAAA,IACD;AAAA,EACD;AACD;",
+  "names": []
+}

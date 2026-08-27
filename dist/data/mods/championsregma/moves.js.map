@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["../../../../data/mods/championsregma/moves.ts"],
+  "sourcesContent": ["export const Moves: import('../../../sim/dex-moves').ModdedMoveDataTable = {\n\tdireclaw: {\n\t\tinherit: true,\n\t\tsecondary: {\n\t\t\tchance: 30,\n\t\t\tonHit(target, source) {\n\t\t\t\tconst status = this.sample(['psn', 'par', 'slp']);\n\t\t\t\tif (target.status) {\n\t\t\t\t\tif (target.status === status) {\n\t\t\t\t\t\tthis.add('-fail', target, status);\n\t\t\t\t\t} else {\n\t\t\t\t\t\tthis.add('-fail', target);\n\t\t\t\t\t}\n\t\t\t\t\treturn;\n\t\t\t\t}\n\t\t\t\ttarget.trySetStatus(status, source);\n\t\t\t},\n\t\t},\n\t},\n};\n"],
+  "mappings": ";;;;;;;;;;;;;;;;;;AAAA;AAAA;AAAA;AAAA;AAAA;AAAO,MAAM,QAA8D;AAAA,EAC1E,UAAU;AAAA,IACT,SAAS;AAAA,IACT,WAAW;AAAA,MACV,QAAQ;AAAA,MACR,MAAM,QAAQ,QAAQ;AACrB,cAAM,SAAS,KAAK,OAAO,CAAC,OAAO,OAAO,KAAK,CAAC;AAChD,YAAI,OAAO,QAAQ;AAClB,cAAI,OAAO,WAAW,QAAQ;AAC7B,iBAAK,IAAI,SAAS,QAAQ,MAAM;AAAA,UACjC,OAAO;AACN,iBAAK,IAAI,SAAS,MAAM;AAAA,UACzB;AACA;AAAA,QACD;AACA,eAAO,aAAa,QAAQ,MAAM;AAAA,MACnC;AAAA,IACD;AAAA,EACD;AACD;",
+  "names": []
+}
