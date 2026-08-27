@@ -332,6 +332,10 @@ ${e.stack}`), `Socket process ${process.pid}`);
         upstreamReq.end();
       };
       const staticRequestHandler = (req, res) => {
+        if (req.url?.includes("/showdown/websocket") || req.method === "CONNECT" || req.method === "PRI") {
+          console.log(`[DIAG REQUEST] method=${req.method} httpVersion=${req.httpVersion} url=${req.url}`);
+          console.log(`[DIAG REQUEST] rawHeaders=${JSON.stringify(req.rawHeaders)}`);
+        }
         req.resume();
         req.addListener("end", () => {
           if (config.customhttpresponse?.(req, res)) {
@@ -390,6 +394,13 @@ ${e.stack}`), `Socket process ${process.pid}`);
     process.once("disconnect", () => this.cleanup());
     process.once("exit", () => this.cleanup());
     server.on("connection", (connection) => this.onConnection(connection));
+    this.server.on("upgrade", (req) => {
+      console.log(`[DIAG UPGRADE] method=${req.method} httpVersion=${req.httpVersion} url=${req.url}`);
+      console.log(`[DIAG UPGRADE] headers=${JSON.stringify(req.headers)}`);
+    });
+    this.server.on("clientError", (err, socket) => {
+      console.log(`[DIAG CLIENTERROR] ${err?.code} ${err?.message} bytesParsed=${err?.bytesParsed} rawPacket=${err?.rawPacket ? err.rawPacket.toString("utf8").slice(0, 300) : "n/a"}`);
+    });
     server.installHandlers(this.server, {});
     this.server.listen(config.port, config.bindaddress);
     console.log(`Worker ${PM.workerid} now listening on ${config.bindaddress}:${config.port}`);
