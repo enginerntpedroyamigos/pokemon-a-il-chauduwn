@@ -692,7 +692,7 @@ name=name.replace(_regex,_replacement);
 }
 return name.trim();
 };_proto3.
-changeName=function changeName(name){var _this5=this;
+changeName=function changeName(name){
 name=this.validateName(name);
 var userid=toID(name);
 if(!userid){
@@ -705,16 +705,17 @@ PS.send("/trn "+name);
 this.update({success:true});
 return;
 }
+
+
+
+
 this.loggingIn=name;
 this.update(null);
-PSLoginServer.rawQuery(
-'getassertion',{userid:userid,challstr:this.challstr}
-).then(function(res){
-_this5.handleAssertion(name,res);
-_this5.updateRegExp();
-});
+PS.send("/trn "+name);
+this.loggingIn=null;
+this.update({success:true});
 };_proto3.
-changeNameWithPassword=function changeNameWithPassword(name,password){var _this6=this;var special=arguments.length>2&&arguments[2]!==undefined?arguments[2]:{needsPassword:true};
+changeNameWithPassword=function changeNameWithPassword(name,password){var _this5=this;var special=arguments.length>2&&arguments[2]!==undefined?arguments[2]:{needsPassword:true};
 this.loggingIn=name;
 if(!password&&!special){
 this.updateLogin(Object.assign({
@@ -727,12 +728,12 @@ this.update(null);
 PSLoginServer.query(
 'login',{name:name,pass:password,challstr:this.challstr}
 ).then(function(data){var _data$curuser;
-_this6.loggingIn=null;
+_this5.loggingIn=null;
 if(data!=null&&(_data$curuser=data.curuser)!=null&&_data$curuser.loggedin){
 
 var username=data.curuser.loggedin.username;
-_this6.registered={name:username,userid:toID(username)};
-_this6.handleAssertion(name,data.assertion);
+_this5.registered={name:username,userid:toID(username)};
+_this5.handleAssertion(name,data.assertion);
 }else{
 
 if(special.needsGoogle){
@@ -741,7 +742,7 @@ try{
 gapi.auth2.getAuthInstance().signOut();
 }catch(_unused4){}
 }
-_this6.updateLogin(Object.assign({
+_this5.updateLogin(Object.assign({
 name:name,
 error:(data==null?void 0:data.error)||'Wrong password.'},
 special)
@@ -1083,8 +1084,8 @@ PSRoom=function(_PSStreamModel4){
 
 
 
-function PSRoom(options){var _this7;
-_this7=_PSStreamModel4.call(this)||this;_this7.id=void 0;_this7.title="";_this7.type='';_this7.isPlaceholder=false;_this7.classType='';_this7.location='left';_this7.closable=true;_this7.connected=false;_this7.connectMode=null;_this7.onRequestFocus=null;_this7.onParentKeyDown=null;_this7.width=0;_this7.height=0;_this7.focusNextUpdate=false;_this7.parentElem=null;_this7.parentRoomid=null;_this7.rightPopup=false;_this7.notifications=[];_this7.isSubtleNotifying=false;_this7.minimized=false;_this7.caughtError=void 0;_this7.noURL=void 0;_this7.args=void 0;_this7.
+function PSRoom(options){var _this6;
+_this6=_PSStreamModel4.call(this)||this;_this6.id=void 0;_this6.title="";_this6.type='';_this6.isPlaceholder=false;_this6.classType='';_this6.location='left';_this6.closable=true;_this6.connected=false;_this6.connectMode=null;_this6.onRequestFocus=null;_this6.onParentKeyDown=null;_this6.width=0;_this6.height=0;_this6.focusNextUpdate=false;_this6.parentElem=null;_this6.parentRoomid=null;_this6.rightPopup=false;_this6.notifications=[];_this6.isSubtleNotifying=false;_this6.minimized=false;_this6.caughtError=void 0;_this6.noURL=void 0;_this6.args=void 0;_this6.
 
 
 
@@ -1245,7 +1246,7 @@ _this7=_PSStreamModel4.call(this)||this;_this7.id=void 0;_this7.title="";_this7.
 
 
 
-globalClientCommands=_this7.parseClientCommands({
+globalClientCommands=_this6.parseClientCommands({
 'j,join':function(target,cmd,elem){
 target=PS.router.extractRoomID(target)||target;
 var roomid=/[^a-z0-9-]/.test(target)?toID(target):target;
@@ -1291,7 +1292,7 @@ this.errorReply("'"+roomid+"' is a popup and can't be maximized.");
 'logout':function(){
 PS.user.logOut();
 },
-'reconnect,connect':function(){var _this8=this;
+'reconnect,connect':function(){var _this7=this;
 if(this.connected){
 if(this.connected!==true)return this.errorReply("You are already connecting.");
 return this.errorReply("You are already connected.");
@@ -1313,7 +1314,7 @@ if(uptime>24*60*60*1000){
 PS.confirm("It's been over a day since you first connected. Please refresh.",{
 okButton:'Refresh'
 }).then(function(confirmed){
-if(confirmed)_this8.send("/refresh");
+if(confirmed)_this7.send("/refresh");
 });
 return;
 }
@@ -1764,9 +1765,9 @@ return true;
 'autojoin,cmd,crq,query':function(){
 this.errorReply("This is a PS system command; do not use it.");
 }
-});_this7.
-clientCommands=null;_this7.
-currentElement=null;_this7.id=options.id;_this7.title=options.title||_this7.title||_this7.id;if(options.type)_this7.type=options.type;if(options.location)_this7.location=options.location;if(options.parentElem)_this7.parentElem=options.parentElem;if(options.parentRoomid)_this7.parentRoomid=options.parentRoomid;if(_this7.location!=='popup'&&_this7.location!=='modal-popup')_this7.parentElem=null;if(options.rightPopup)_this7.rightPopup=true;if(options.connected)_this7.connected=options.connected;if(options.connectMode!==undefined)_this7.connectMode=options.connectMode;if(options.backlog)_this7.backlog=options.backlog;_this7.noURL=options.noURL||false;_this7.args=options.args||null;return _this7;}_inheritsLoose(PSRoom,_PSStreamModel4);var _proto5=PSRoom.prototype;_proto5.getParent=function getParent(){if(this.parentRoomid)return PS.rooms[this.parentRoomid]||null;return null;};_proto5.notify=function notify(options){var _this9=this;var desktopNotification=null;var roomIsFocused=(document.hasFocus==null?void 0:document.hasFocus())&&PS.isVisiblePanel(this);if(roomIsFocused&&!options.noAutoDismiss)return;if(!roomIsFocused){PS.playNotificationSound();try{desktopNotification=new Notification(options.title,{body:options.body});if(desktopNotification){desktopNotification.onclick=function(){window.focus();PS.focusRoom(_this9.id);};if(PS.prefs.temporarynotifications){setTimeout(function(){var _desktopNotification;(_desktopNotification=desktopNotification)==null||_desktopNotification.close();},5000);}}}catch(_unused6){}}if(options.noAutoDismiss&&!options.id){throw new Error("Must specify id for manual dismissing");}if(options.id){this.notifications=this.notifications.filter(function(notification){return notification.id!==options.id;});}this.notifications.push({title:options.title,body:options.body,id:options.id||'',noAutoDismiss:options.noAutoDismiss||false,notification:desktopNotification});PS.update();};_proto5.subtleNotify=function subtleNotify(){var _PS$prefs$logtimes,_room$lastMessage;if(PS.isVisiblePanel(this))return;var room=PS.rooms[this.id];var lastSeenTimestamp=((_PS$prefs$logtimes=PS.prefs.logtimes)==null||(_PS$prefs$logtimes=_PS$prefs$logtimes[PS.server.id])==null?void 0:_PS$prefs$logtimes[this.id])||0;var lastMessageTime=+(((_room$lastMessage=room.lastMessage)==null?void 0:_room$lastMessage[1])||0);this.isSubtleNotifying=!(lastMessageTime+room.timeOffset<=lastSeenTimestamp);PS.update();};_proto5.dismissNotificationAt=function dismissNotificationAt(i){try{var _this$notifications$i;(_this$notifications$i=this.notifications[i].notification)==null||_this$notifications$i.close();}catch(_unused7){}this.notifications.splice(i,1);};_proto5.dismissNotification=function dismissNotification(id){var index=this.notifications.findIndex(function(n){return n.id===id;});if(index!==-1){this.dismissNotificationAt(index);}PS.update();};_proto5.autoDismissNotifications=function autoDismissNotifications(){var room=PS.rooms[this.id];if(room.lastViewedTime){var lastMessageDates=PS.prefs.logtimes||{};if(!lastMessageDates[PS.server.id])lastMessageDates[PS.server.id]={};lastMessageDates[PS.server.id][room.id]=room.lastViewedTime||0;PS.prefs.set('logtimes',lastMessageDates);}for(var i=this.notifications.length-1;i>=0;i--){if(!this.notifications[i].noAutoDismiss){this.dismissNotificationAt(i);}}this.isSubtleNotifying=false;};_proto5.interruptClose=function interruptClose(explicit,elem){return false;};_proto5.connect=function connect(){throw new Error("This room is not designed to connect to a server room");};_proto5.handleReconnect=function handleReconnect(msg){};_proto5.receiveLine=function receiveLine(args){switch(args[0]){case'title':{this.title=args[1];PS.update();break;}case'notify':{var title=args[1],body=args[2],toHighlight=args[3];if(toHighlight&&!ChatRoom.getHighlight(toHighlight,this.id))break;this.notify({title:title,body:body});break;}case'tempnotify':{var id=args[1],_title=args[2],_body=args[3],_toHighlight=args[4];if(_toHighlight&&!ChatRoom.getHighlight(_toHighlight,this.id))break;this.notify({title:_title,body:_body,id:id});break;}case'tempnotifyoff':{var _id=args[1];this.dismissNotification(_id);break;}default:{this.update(args);}}};_proto5.add=function add(line,ifChat){if(this.type!=='chat'&&this.type!=='battle'){if(!ifChat){var _PS$rooms;PS.mainmenu.handlePM(PS.user.userid,PS.user.userid);(_PS$rooms=PS.rooms['dm-'])==null||_PS$rooms.receiveLine(BattleTextParser.parseLine(line));}}else{this.receiveLine(BattleTextParser.parseLine(line));}};_proto5.errorReply=function errorReply(message){var element=arguments.length>1&&arguments[1]!==undefined?arguments[1]:this.currentElement;if((element==null?void 0:element.tagName)==='BUTTON'||(element==null?void 0:element.tagName)==='SELECT'){PS.alert(message,{parentElem:element});}else{this.add("|error|"+message);}};_proto5.parseClientCommands=function parseClientCommands(commands){var parsedCommands={};for(var cmd in commands){var names=cmd.split(',').map(function(name){return name.trim();});for(var _i25=0;_i25<names.length;_i25++){var name=names[_i25];if(name.includes(' '))throw new Error("Client command names cannot contain spaces: "+name);parsedCommands[name]=commands[cmd];}}return parsedCommands;};_proto5.
+});_this6.
+clientCommands=null;_this6.
+currentElement=null;_this6.id=options.id;_this6.title=options.title||_this6.title||_this6.id;if(options.type)_this6.type=options.type;if(options.location)_this6.location=options.location;if(options.parentElem)_this6.parentElem=options.parentElem;if(options.parentRoomid)_this6.parentRoomid=options.parentRoomid;if(_this6.location!=='popup'&&_this6.location!=='modal-popup')_this6.parentElem=null;if(options.rightPopup)_this6.rightPopup=true;if(options.connected)_this6.connected=options.connected;if(options.connectMode!==undefined)_this6.connectMode=options.connectMode;if(options.backlog)_this6.backlog=options.backlog;_this6.noURL=options.noURL||false;_this6.args=options.args||null;return _this6;}_inheritsLoose(PSRoom,_PSStreamModel4);var _proto5=PSRoom.prototype;_proto5.getParent=function getParent(){if(this.parentRoomid)return PS.rooms[this.parentRoomid]||null;return null;};_proto5.notify=function notify(options){var _this8=this;var desktopNotification=null;var roomIsFocused=(document.hasFocus==null?void 0:document.hasFocus())&&PS.isVisiblePanel(this);if(roomIsFocused&&!options.noAutoDismiss)return;if(!roomIsFocused){PS.playNotificationSound();try{desktopNotification=new Notification(options.title,{body:options.body});if(desktopNotification){desktopNotification.onclick=function(){window.focus();PS.focusRoom(_this8.id);};if(PS.prefs.temporarynotifications){setTimeout(function(){var _desktopNotification;(_desktopNotification=desktopNotification)==null||_desktopNotification.close();},5000);}}}catch(_unused6){}}if(options.noAutoDismiss&&!options.id){throw new Error("Must specify id for manual dismissing");}if(options.id){this.notifications=this.notifications.filter(function(notification){return notification.id!==options.id;});}this.notifications.push({title:options.title,body:options.body,id:options.id||'',noAutoDismiss:options.noAutoDismiss||false,notification:desktopNotification});PS.update();};_proto5.subtleNotify=function subtleNotify(){var _PS$prefs$logtimes,_room$lastMessage;if(PS.isVisiblePanel(this))return;var room=PS.rooms[this.id];var lastSeenTimestamp=((_PS$prefs$logtimes=PS.prefs.logtimes)==null||(_PS$prefs$logtimes=_PS$prefs$logtimes[PS.server.id])==null?void 0:_PS$prefs$logtimes[this.id])||0;var lastMessageTime=+(((_room$lastMessage=room.lastMessage)==null?void 0:_room$lastMessage[1])||0);this.isSubtleNotifying=!(lastMessageTime+room.timeOffset<=lastSeenTimestamp);PS.update();};_proto5.dismissNotificationAt=function dismissNotificationAt(i){try{var _this$notifications$i;(_this$notifications$i=this.notifications[i].notification)==null||_this$notifications$i.close();}catch(_unused7){}this.notifications.splice(i,1);};_proto5.dismissNotification=function dismissNotification(id){var index=this.notifications.findIndex(function(n){return n.id===id;});if(index!==-1){this.dismissNotificationAt(index);}PS.update();};_proto5.autoDismissNotifications=function autoDismissNotifications(){var room=PS.rooms[this.id];if(room.lastViewedTime){var lastMessageDates=PS.prefs.logtimes||{};if(!lastMessageDates[PS.server.id])lastMessageDates[PS.server.id]={};lastMessageDates[PS.server.id][room.id]=room.lastViewedTime||0;PS.prefs.set('logtimes',lastMessageDates);}for(var i=this.notifications.length-1;i>=0;i--){if(!this.notifications[i].noAutoDismiss){this.dismissNotificationAt(i);}}this.isSubtleNotifying=false;};_proto5.interruptClose=function interruptClose(explicit,elem){return false;};_proto5.connect=function connect(){throw new Error("This room is not designed to connect to a server room");};_proto5.handleReconnect=function handleReconnect(msg){};_proto5.receiveLine=function receiveLine(args){switch(args[0]){case'title':{this.title=args[1];PS.update();break;}case'notify':{var title=args[1],body=args[2],toHighlight=args[3];if(toHighlight&&!ChatRoom.getHighlight(toHighlight,this.id))break;this.notify({title:title,body:body});break;}case'tempnotify':{var id=args[1],_title=args[2],_body=args[3],_toHighlight=args[4];if(_toHighlight&&!ChatRoom.getHighlight(_toHighlight,this.id))break;this.notify({title:_title,body:_body,id:id});break;}case'tempnotifyoff':{var _id=args[1];this.dismissNotification(_id);break;}default:{this.update(args);}}};_proto5.add=function add(line,ifChat){if(this.type!=='chat'&&this.type!=='battle'){if(!ifChat){var _PS$rooms;PS.mainmenu.handlePM(PS.user.userid,PS.user.userid);(_PS$rooms=PS.rooms['dm-'])==null||_PS$rooms.receiveLine(BattleTextParser.parseLine(line));}}else{this.receiveLine(BattleTextParser.parseLine(line));}};_proto5.errorReply=function errorReply(message){var element=arguments.length>1&&arguments[1]!==undefined?arguments[1]:this.currentElement;if((element==null?void 0:element.tagName)==='BUTTON'||(element==null?void 0:element.tagName)==='SELECT'){PS.alert(message,{parentElem:element});}else{this.add("|error|"+message);}};_proto5.parseClientCommands=function parseClientCommands(commands){var parsedCommands={};for(var cmd in commands){var names=cmd.split(',').map(function(name){return name.trim();});for(var _i25=0;_i25<names.length;_i25++){var name=names[_i25];if(name.includes(' '))throw new Error("Client command names cannot contain spaces: "+name);parsedCommands[name]=commands[cmd];}}return parsedCommands;};_proto5.
 
 
 
@@ -1815,9 +1816,9 @@ this.dismissNotificationAt(i);
 
 PlaceholderRoom=function(_PSRoom2){
 
-function PlaceholderRoom(options){var _this10;
-_this10=_PSRoom2.call(this,options)||this;_this10.classType='placeholder';
-_this10.isPlaceholder=true;return _this10;
+function PlaceholderRoom(options){var _this9;
+_this9=_PSRoom2.call(this,options)||this;_this9.classType='placeholder';
+_this9.isPlaceholder=true;return _this9;
 }_inheritsLoose(PlaceholderRoom,_PSRoom2);var _proto6=PlaceholderRoom.prototype;_proto6.
 receiveLine=function receiveLine(args){
 (this.backlog||(this.backlog=[])).push(args);
@@ -2057,23 +2058,23 @@ var PS=new(function(_PSModel){
 
 
 
-function _class(){var _document$querySelect2,_document$getElementB;var _this11;
-_this11=_PSModel.call(this)||this;_this11.down=false;_this11.prefs=new PSPrefs();_this11.teams=new PSTeams();_this11.user=new PSUser();_this11.server=new PSServer();_this11.connection=null;_this11.isOffline=false;_this11.startTime=Date.now();_this11.router=null;_this11.rooms={};_this11.roomTypes={};_this11.routes=Object.assign(Object.create(null),{"teambuilder":"*","news":"*mini-window","":"*","rooms":"*right","user-*":"*popup","viewuser-*":"*popup","volume":"*popup","options":"*modal-popup","*":"*right","battle-*":"*","battles":"*right","teamdropdown":"*modal-popup","formatdropdown":"*modal-popup","team-*":"*","ladder":"*","ladder-*":"*","view-*":"*","login":"*modal-popup","help-*":"*right","tourpopout":"*modal-popup","groupchat-*":"*right","users":"*popup","useroptions-*":"*popup","userlist":"*modal-popup","avatars":"*modal-popup","changepassword":"*modal-popup","register":"*modal-popup","forfeitbattle":"*modal-popup","replaceplayer":"*modal-popup","changebackground":"*modal-popup","confirmleaveroom":"*modal-popup","chatformatting":"*modal-popup","popup-*":"*modal-popup","roomtablist":"*modal-popup","battleoptions":"*modal-popup","battletimer":"*modal-popup","rules-*":"*modal-popup","resources":"*","game-*":"*","teamstorage-*":"*modal-popup","viewteam-*":"*"});_this11.leftRoomList=[];_this11.rightRoomList=[];_this11.miniRoomList=[];_this11.popups=[];_this11.room=null;_this11.panel=null;_this11.leftPanel=null;_this11.rightPanel=null;_this11.leftPanelWidth=0;_this11.mainmenu=null;_this11.layoutViewportWidth=0;_this11.dragging=null;_this11.lastMessageTime='';_this11.arrowKeysUsed=false;_this11.newsHTML=((_document$querySelect2=document.querySelector('#room-news .readable-bg'))==null?void 0:_document$querySelect2.innerHTML)||'';_this11.newsId=((_document$getElementB=document.getElementById('room-news'))==null?void 0:_document$getElementB.getAttribute('data-newsid'))||null;_this11.libsLoaded=makeLoadTracker();
+function _class(){var _document$querySelect2,_document$getElementB;var _this10;
+_this10=_PSModel.call(this)||this;_this10.down=false;_this10.prefs=new PSPrefs();_this10.teams=new PSTeams();_this10.user=new PSUser();_this10.server=new PSServer();_this10.connection=null;_this10.isOffline=false;_this10.startTime=Date.now();_this10.router=null;_this10.rooms={};_this10.roomTypes={};_this10.routes=Object.assign(Object.create(null),{"teambuilder":"*","news":"*mini-window","":"*","rooms":"*right","user-*":"*popup","viewuser-*":"*popup","volume":"*popup","options":"*modal-popup","*":"*right","battle-*":"*","battles":"*right","teamdropdown":"*modal-popup","formatdropdown":"*modal-popup","team-*":"*","ladder":"*","ladder-*":"*","view-*":"*","login":"*modal-popup","help-*":"*right","tourpopout":"*modal-popup","groupchat-*":"*right","users":"*popup","useroptions-*":"*popup","userlist":"*modal-popup","avatars":"*modal-popup","changepassword":"*modal-popup","register":"*modal-popup","forfeitbattle":"*modal-popup","replaceplayer":"*modal-popup","changebackground":"*modal-popup","confirmleaveroom":"*modal-popup","chatformatting":"*modal-popup","popup-*":"*modal-popup","roomtablist":"*modal-popup","battleoptions":"*modal-popup","battletimer":"*modal-popup","rules-*":"*modal-popup","resources":"*","game-*":"*","teamstorage-*":"*modal-popup","viewteam-*":"*"});_this10.leftRoomList=[];_this10.rightRoomList=[];_this10.miniRoomList=[];_this10.popups=[];_this10.room=null;_this10.panel=null;_this10.leftPanel=null;_this10.rightPanel=null;_this10.leftPanelWidth=0;_this10.mainmenu=null;_this10.layoutViewportWidth=0;_this10.dragging=null;_this10.lastMessageTime='';_this10.arrowKeysUsed=false;_this10.newsHTML=((_document$querySelect2=document.querySelector('#room-news .readable-bg'))==null?void 0:_document$querySelect2.innerHTML)||'';_this10.newsId=((_document$getElementB=document.getElementById('room-news'))==null?void 0:_document$getElementB.getAttribute('data-newsid'))||null;_this10.libsLoaded=makeLoadTracker();
 
-_this11.mainmenu=_this11.addRoom({
+_this10.mainmenu=_this10.addRoom({
 id:'',
 title:"Home"
 });
 
-_this11.addRoom({
+_this10.addRoom({
 id:'rooms',
 title:"Rooms",
 autofocus:false
 });
-_this11.rightPanel=_this11.rooms['rooms'];
+_this10.rightPanel=_this10.rooms['rooms'];
 
-if(_this11.newsHTML){
-_this11.addRoom({
+if(_this10.newsHTML){
+_this10.addRoom({
 id:'news',
 title:"News",
 autofocus:false
@@ -2081,15 +2082,15 @@ autofocus:false
 }
 
 
-var autojoin=_this11.prefs.autojoin;
+var autojoin=_this10.prefs.autojoin;
 if(autojoin){
 if(typeof autojoin==='string'){
 autojoin={showdown:autojoin};
 }
-var rooms=autojoin[_this11.server.id]||'';for(var _i27=0,_rooms$split4=
+var rooms=autojoin[_this10.server.id]||'';for(var _i27=0,_rooms$split4=
 rooms.split(",");_i27<_rooms$split4.length;_i27++){var title=_rooms$split4[_i27];
 var id=/[^a-z0-9-]/.test(title)?toID(title):title;
-_this11.addRoom({id:id,title:title,connected:'pending',autofocus:false});
+_this10.addRoom({id:id,title:title,connected:'pending',autofocus:false});
 }
 }
 
@@ -2098,11 +2099,11 @@ if(window.webkitNotification){var _window;
 (_window=window).Notification||(_window.Notification=window.webkitNotification);
 }
 
-_this11.updateLayout();
+_this10.updateLayout();
 window.addEventListener('resize',function(){
 
-if(_this11.updateLayout())_PSModel.prototype.update.call(_this11);
-});return _this11;
+if(_this10.updateLayout())_PSModel.prototype.update.call(_this10);
+});return _this10;
 }_inheritsLoose(_class,_PSModel);var _proto7=_class.prototype;_proto7.roomLayoutBreakpointPassed=function roomLayoutBreakpointPassed(room,newWidth,newHeight){var oldWidth=room.width;var oldHeight=room.height;if(oldWidth<550!==newWidth<550||oldWidth<620!==newWidth<620||oldWidth<=780!==newWidth<=780){return true;}if(room.type==='battle'){if(oldWidth<500!==newWidth<500){return true;}var oldLayoutState=this.chooseBattleLayout(oldWidth,oldHeight,this.prefs.battlelayout);var newLayoutState=this.chooseBattleLayout(newWidth,newHeight,this.prefs.battlelayout);if(oldLayoutState.layout!==newLayoutState.layout||oldLayoutState.battleHeight!==newLayoutState.battleHeight||oldLayoutState.battleWidth!==newLayoutState.battleWidth||oldLayoutState.overlayControls!==newLayoutState.overlayControls){return true;}}return false;};_proto7.chooseBattleLayout=function chooseBattleLayout(width,height,preference){var scale=Math.min(1,width/640,height/360);var uncappedBattleHeight=Math.round(360*scale);var layout=width>780?'side-by-side':height<uncappedBattleHeight+150?'scrolling':'top-and-bottom';var preferredLayout=preference==null?void 0:preference.replace(/-overlay$/,'');if(preferredLayout){layout=preferredLayout;}if(layout==='side-by-side'&&width>=500){scale=Math.min(scale,Math.max(0,width-180)/640);}else if(layout==='top-and-bottom'){scale=Math.min(scale,Math.max(0,height-180)/360);}var battleHeight=Math.round(360*scale);var battleWidth=Math.round(640*scale);var overlayControls=height<battleHeight+180;if(preferredLayout){overlayControls=!!(preference!=null&&preference.endsWith('-overlay'));}return{layout:layout,battleHeight:battleHeight,battleWidth:battleWidth,overlayControls:overlayControls};};_proto7.
 
 
@@ -2645,10 +2646,10 @@ parentElem:opts.parentElem
 confirm=function confirm(message)
 
 
-{var _opts$cancelButton,_this12=this;var opts=arguments.length>1&&arguments[1]!==undefined?arguments[1]:{};
+{var _opts$cancelButton,_this11=this;var opts=arguments.length>1&&arguments[1]!==undefined?arguments[1]:{};
 (_opts$cancelButton=opts.cancelButton)!=null?_opts$cancelButton:opts.cancelButton='Cancel';
 return new Promise(function(resolve){
-_this12.join("popup-"+_this12.popups.length,{
+_this11.join("popup-"+_this11.popups.length,{
 args:Object.assign({message:message,okValue:true,cancelValue:false,callback:resolve},opts,{parentElem:null}),
 parentElem:opts.parentElem
 });
@@ -2657,10 +2658,10 @@ parentElem:opts.parentElem
 prompt=function prompt(message)
 
 
-{var _opts$cancelButton2,_this13=this;var opts=arguments.length>1&&arguments[1]!==undefined?arguments[1]:{};
+{var _opts$cancelButton2,_this12=this;var opts=arguments.length>1&&arguments[1]!==undefined?arguments[1]:{};
 (_opts$cancelButton2=opts.cancelButton)!=null?_opts$cancelButton2:opts.cancelButton='Cancel';
 return new Promise(function(resolve){
-_this13.join("popup-"+_this13.popups.length,{
+_this12.join("popup-"+_this12.popups.length,{
 args:Object.assign({
 message:message,value:opts.defaultValue||'',
 okValue:true,cancelValue:null,callback:resolve},opts,{parentElem:null}),

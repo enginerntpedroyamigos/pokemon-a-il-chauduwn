@@ -126,20 +126,13 @@ switch(cmd){
 case'challstr':{
 var challstr=args[1];
 PS.user.challstr=challstr;
-PSLoginServer.query(
-'upkeep',{challstr:challstr}
-).then(function(res){
-if(!(res!=null&&res.username)){
-PS.user.initializing=false;
-return;
-}
 
-res.username=res.username.replace(/[|,;]+/g,'');
-if(res.loggedin){
-PS.user.registered={name:res.username,userid:toID(res.username)};
-}
-PS.user.handleAssertion(res.username,res.assertion);
-});
+
+
+
+
+PS.user.initializing=false;
+PS.user.update(null);
 return;
 }case'updateuser':{
 var fullName=args[1],namedCode=args[2],avatar=args[3],settingsJSON=args[4];
