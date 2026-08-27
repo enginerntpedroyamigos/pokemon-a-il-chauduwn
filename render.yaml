@@ -1,0 +1,10 @@
+services:
+  - type: web
+    name: pokemon-anil-showdown
+    runtime: node
+    plan: free
+    buildCommand: npm install && node build && mkdir -p logs/repl logs/chat logs/modlog logs/tickets
+    startCommand: node pokemon-showdown start --no-security
+    envVars:
+      - key: NODE_VERSION
+        value: 20.18.0
